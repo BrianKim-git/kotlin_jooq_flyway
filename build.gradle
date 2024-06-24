@@ -1,0 +1,73 @@
+buildscript {
+    configurations['classpath'].resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == "org.jooq") {
+            details.useVersion("3.19.7")
+        }
+    }
+    dependencies {
+        classpath("org.flywaydb:flyway-database-postgresql:10.15.0")
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.24'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.24'
+    id "nu.studer.jooq" version "9.0"
+    id "org.flywaydb.flyway" version "10.15.0"
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.0'
+
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
+    implementation 'org.flywaydb:flyway-core:10.15.0'
+
+    implementation "org.jooq:jooq-meta:3.19.7"
+    implementation "org.jooq:jooq-codegen:3.19.7"
+    jooqGenerator project(':jooq-custom')
+    jooqGenerator 'org.postgresql:postgresql:42.6.0'
+
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.15.0'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll '-Xjsr305=strict'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+apply from: 'flyway.gradle'
+apply from: 'jooq.gradle'

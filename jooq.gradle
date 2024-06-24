@@ -1,0 +1,75 @@
+jooq {
+    configurations {
+        main {
+            generationTool {
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://localhost:5432/kotlin_jooq_flyway'
+                    user = 'root'
+                    password = 'root'
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                        includes = '.*'
+                        unsignedTypes = false
+
+                        forcedTypes {
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'JSONB?'
+                            }
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'INET'
+                            }
+                        }
+                        excludes = 'flyway_schema_history'
+                    }
+
+                    generate {
+
+                        // TABLE dsl로 기본 dao 생성
+//                        daos = true
+
+                        // Annotate DAOs (and other types) with spring annotations, such as @Repository and @Autowired
+                        // for auto-wiring the Configuration instance, e.g. from Spring Boot's jOOQ starter
+//                        springAnnotations = true
+
+                        // @Transactional 애너테이션이 추가된 Spring 전용 DAO 생성
+//                        springDao = true
+
+                        // jpa 에너테이션 포조에 추가
+                        // jpaAnnotations = true
+                        // jpaVersion = 2.2
+
+                        // hibernate validate annotation 추가
+                        // validationAnnotations = true
+
+//                        deprecated = true
+                        records = false
+//                        pojo생성시키는 속성
+//                        immutablePojos = true
+//                        fluentSetters = true
+//                        javaTimeTypes = true
+                    }
+
+                    target {
+                        packageName = 'jooq.dsl'
+                        directory = 'src/generated'
+                        encoding = 'UTF-8'
+                    }
+
+                    // DSL에 JOOQ로 생성된것임을 알리는 'J' Prefix 추가
+                    strategy {
+                        name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+                    }
+                }
+            }
+        }
+    }
+}

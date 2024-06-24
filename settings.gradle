@@ -1,0 +1,2 @@
+rootProject.name = 'kotlin_jooq_flyway'
+include 'jooq-custom'

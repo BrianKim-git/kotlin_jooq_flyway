@@ -1,0 +1,7 @@
+flyway {
+    url='jdbc:postgresql://localhost:5432/kotlin_jooq_flyway'
+    user='root'
+    password='root'
+    locations=['classpath:db/migration']
+    cleanDisabled = false
+}
